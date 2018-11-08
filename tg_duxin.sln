@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2050
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tg_duxin", "tg_duxin\tg_duxin.csproj", "{0DE39A39-1DFB-42BF-B95E-64E9F9A67AC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DE39A39-1DFB-42BF-B95E-64E9F9A67AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE39A39-1DFB-42BF-B95E-64E9F9A67AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE39A39-1DFB-42BF-B95E-64E9F9A67AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE39A39-1DFB-42BF-B95E-64E9F9A67AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7CAD75B0-2A7F-4C13-BE7B-73E0F46C54D3}
+	EndGlobalSection
+EndGlobal
