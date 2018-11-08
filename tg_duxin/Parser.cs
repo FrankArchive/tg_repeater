@@ -17,7 +17,8 @@ namespace tg_duxin {
             ret.operation = Global.commandsPool[moduleId].IndexOf(command);
             if (raw.TrimEnd().Length == command.Length) return ret;
             raw = raw.Substring(command.Length+1).Trim();
-            raw = raw.Insert(0, " ");ret.parameters = new List<string>();
+            if (raw[0] != '"') raw = raw.Insert(0, " ");
+            ret.parameters = new List<string>();
             for (int i = 0; i < raw.Length; i++) {
                 int x = -1;
                 switch (raw[i]) {
