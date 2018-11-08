@@ -17,13 +17,24 @@ namespace tg_duxin {
         private static void InitModule() {
             ReplyerBot.Init();
         }
-        private static void ExecModule(Message message) {
-            if (message.Type == MessageType.Text)
-                ReplyerBot.GetResult(message.Text);
-            //add modules here
+        private static async void ExecModule(Message message) {
+            string x = "";
+            try {
+                if (message.Type == MessageType.Text)
+                    x = ReplyerBot.GetResult(message.Text, message.From.Username);
+                await repeater.SendTextMessageAsync(message.Chat.Id, x);
+            }
+            catch (Exception e) {
+                if (e is NotImplementedException) { }
+                else Console.WriteLine($"执行回复模块时遇到了异常：\n{e.ToString()}\n暂时忽略并继续执行\n");
+            }
+
+            //add module operations here
+            if (message.Type == MessageType.Text && message.Text == "/start")
+                await repeater.SendTextMessageAsync(message.Chat.Id, Start.GetResult());
         }
 
-        //本质功能
+        //本质功能，绝对不是module//连start都是module
         private static string Repeate(string message) {
             if (message == lastMessage) {
                 if (repeated == false) {
@@ -54,6 +65,9 @@ namespace tg_duxin {
             repeater.OnMessage += OnMessageRecv;
             InitModule();
             repeater.StartReceiving();
+            Console.WriteLine("已启动");
+            Console.ReadLine();
+            repeater.StopReceiving();
         }
     }
 }
