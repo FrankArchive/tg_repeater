@@ -6,11 +6,13 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace tg_duxin {
-    class ReplyerBot {
-        private static int moduleId = 0;
+namespace tg_duxin.Module_ReplyerBot {
+    class Interface : Module {
+        public new readonly string name = "回复bot";
+        public new readonly int moduleID = Global.cntModules++;
+        public new readonly MessageType required = MessageType.Text;
 
-        public static void Init() {
+        public override void Init() {
             try {
                 DBAgent.InitDB();
             }
@@ -19,15 +21,15 @@ namespace tg_duxin {
                 Console.ReadLine();
                 Process.GetCurrentProcess().Kill();
             }
-            moduleId = Global.cntModules++;
-            Global.commandsPool.Add(
-                new List<string>(new string[] { "teach", "force", "reply", "delete" })
-                );
+            Global.commandsPool[moduleID] =
+                new List<string>(new string[] { "teach", "force", "reply", "delete" });
         }
-        public static string GetResult(string msg, string user) {
+
+        public override string GetResult(Message m) {
             Command x;
+            string msg = m.Text, user = m.From.Username;
             try {
-                x = Parser.ParseCommand(msg, moduleId);
+                x = Parser.ParseCommand(msg, moduleID);
             }
             catch (CommandErrorException) {
                 if (DBAgent.isExist(msg) == false)

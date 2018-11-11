@@ -11,39 +11,20 @@ using Telegram.Bot.Types.Enums;
 
 namespace tg_duxin {
     class Program {
-        private static string lastMessage = "";
+        private static Dictionary<long, string> lastMessage = new Dictionary<long, string>();
         private static bool repeated = false;
-        private static TelegramBotClient repeater = new TelegramBotClient(Global.bot_key);
-        private static void InitModule() {
-            ReplyerBot.Init();
-        }
-        private static async void ExecModule(Message message) {
-            string x = "";
-            try {
-                if (message.Type == MessageType.Text)
-                    x = ReplyerBot.GetResult(message.Text, message.From.Username);
-                await repeater.SendTextMessageAsync(message.Chat.Id, x);
-            }
-            catch (Exception e) {
-                if (e is NotImplementedException) { }
-                else Console.WriteLine($"执行回复模块时遇到了异常：\n{e.ToString()}\n暂时忽略并继续执行\n");
-            }
-
-            //add module operations here
-            if (message.Type == MessageType.Text && message.Text == "/start")
-                await repeater.SendTextMessageAsync(message.Chat.Id, Start.GetResult());
-        }
+        public static TelegramBotClient repeater = new TelegramBotClient(Global.bot_key);
 
         //本质功能，绝对不是module//连start都是module
-        private static string Repeate(string message) {
-            if (message == lastMessage) {
+        private static string Repeate(string message, long id) {
+            if (message == lastMessage[id]) {
                 if (repeated == false) {
                     repeated = true;
-                    return lastMessage;
+                    return lastMessage[id];
                 }
                 else return "";
             }
-            lastMessage = message;
+            lastMessage[id] = message;
             repeated = false;
             return "";
         }
@@ -51,23 +32,33 @@ namespace tg_duxin {
             Message message = msg.Message;
             switch (message.Type) {
                 case MessageType.Text:
-                    string s = Repeate(message.Text);
+                    string s = Repeate(message.Text,message.Chat.Id);
                     if (s.Any())
                         await repeater.SendTextMessageAsync(message.Chat.Id, s);
                     break;
                 default:
                     break;
             }
-            ExecModule(message);
         }
         
         static void Main(string[] args) {
             repeater.OnMessage += OnMessageRecv;
-            InitModule();
+            repeater.OnMessage += PassiveModuleManager.OnTrigger;
+
+            PassiveModuleManager.LoadModule();
+            OptimisticModuleManager.LoadModule();
+            Global.commandsPool = new List<List<string>>();
+            for (int i = 0; i < Global.cntModules; i++)
+                Global.commandsPool.Add(new List<string>());
+            PassiveModuleManager.InitModule();
+            OptimisticModuleManager.InitModule();
+            
+
             repeater.StartReceiving();
             Console.WriteLine("已启动");
             Console.ReadLine();
             repeater.StopReceiving();
+            OptimisticModuleManager.StopModule();
         }
     }
 }

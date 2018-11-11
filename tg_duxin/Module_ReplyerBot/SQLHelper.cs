@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Data.SQLite;
+using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Text;
-namespace tg_duxin {
+namespace tg_duxin.Module_ReplyerBot {
     /// <summary>
     /// SQLite 操作类
     /// </summary>
-    class SqLiteHelper {
+    class SQLHelper {
 
         /// <summary>
         /// 数据库连接定义
         /// </summary>
         private SQLiteConnection dbConnection;
-
         /// <summary>
         /// SQL命令定义
         /// </summary>
@@ -26,8 +26,11 @@ namespace tg_duxin {
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="connectionString">连接SQLite库字符串</param>
-        public SqLiteHelper(string connectionString) {
+        /// <param name="connectionString">连接数据库字符串</param>
+        /// <example>
+        /// @"server=数据库;uid=帐号;pwd=密码;database=数据库;charset=utf8"//mysql
+        /// </example>
+        public SQLHelper(string connectionString) {
             try {
                 dbConnection = new SQLiteConnection(connectionString);
                 dbConnection.Open();

@@ -4,38 +4,38 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace tg_duxin {
+namespace tg_duxin.Module_ReplyerBot {
     class DBAgent {
         
-        private static SqLiteHelper data;
+        private static SQLHelper data;
         public static void InitDB() {
-            if (File.Exists(Global.databaseName) == false)
-                SQLiteConnection.CreateFile(Global.databaseName);
-            data = new SqLiteHelper($"data source={Global.databaseName};");
+            if (File.Exists(Config.databaseName) == false)
+                SQLiteConnection.CreateFile(Config.databaseName);
+            data = new SQLHelper($"data source={Config.databaseName};");
             data.CreateTable(
-                Global.databaseTablename,
+                Config.databaseTablename,
                 new string[] { "key", "val", "create_by", "last_edit" },
-                new string[] { "varchar(50)", "varchar(50)", "varchar(50)", "varchar(50)" }
+                new string[] { "text", "text", "text", "text" }
                 );
         }
         public static void Insert(string w, string d, string user) {
-            data.InsertValues(Global.databaseTablename, new string[] { w, d, user, "" });
+            data.InsertValues(Config.databaseTablename, new string[] { w, d, user, "" });
         }
         public static void Erase(string w) {
             data.DeleteValuesAND(
-                Global.databaseTablename, 
+                Config.databaseTablename, 
                 new string[] { "key" }, 
                 new string[] { w }, 
                 new string[] { "=" }
                 );
         }
         public static void Update(string w, string d, string user) {
-            data.UpdateValues(Global.databaseTablename, 
+            data.UpdateValues(Config.databaseTablename, 
                 new string[] { "val", "last_edit" }, new string[] { d, user }, "key", w);
         }
         public static bool isExist(string w) {//emmmmm这里写的丑是因为刚才没仔细想sql该咋写
             SQLiteDataReader d = data.ReadTable(
-                Global.databaseTablename,
+                Config.databaseTablename,
                 new string[] { "val" },
                 new string[] { "key" },
                 new string[] { "=" },
@@ -46,7 +46,7 @@ namespace tg_duxin {
         }
         public static string Lookup(string w) {
             SQLiteDataReader d = data.ReadTable(
-                Global.databaseTablename,
+                Config.databaseTablename,
                 new string[] { "val" },
                 new string[] { "key" },
                 new string[] { "=" },
