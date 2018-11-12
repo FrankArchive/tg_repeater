@@ -75,10 +75,15 @@ namespace tg_duxin {
                         string sendBack = i.GetResult(message);
                         if (sendBack == "") continue;
                         //TODO:非文字消息如何处理？
-                        await Program.repeater.SendTextMessageAsync(
-                            message.Chat.Id,
-                            sendBack
-                           );
+                        try {
+                            await Program.repeater.SendTextMessageAsync(
+                                message.Chat.Id,
+                                sendBack
+                               );
+                        }
+                        catch (NotImplementedException) {
+                            //supress not implemented exceptions
+                        }
                     }
                 }
                 catch (Exception e) {
