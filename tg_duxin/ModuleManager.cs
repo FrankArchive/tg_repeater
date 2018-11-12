@@ -11,6 +11,7 @@ namespace tg_duxin {
         public readonly string name = "";
         public readonly MessageType required = MessageType.Unknown;
         public readonly int moduleID = -1;
+        public bool onCommandOnly = true;
 
         public virtual void Init() {
             throw new NotImplementedException();
@@ -26,11 +27,11 @@ namespace tg_duxin {
     class OptimisticModuleManager {//主动式mod
         private static List<Module> pool = new List<Module>();
         public static void LoadModule() {
-            pool.Add(new Module_QQForwarding.Interface());
+            pool.Add(new Module_QQForwarding.InterfaceListener());
         }
-        public static async void SendText(Chat contact, string message) {
+        public static async void SendText(int chatID, string message) {
             await Program.repeater.SendTextMessageAsync(
-                contact.Id,
+                chatID,
                 message
                 );
         }
@@ -49,6 +50,7 @@ namespace tg_duxin {
         public static void LoadModule() {
             pool.Add(new Module_ReplyerBot.Interface());
             pool.Add(new Module_Start.Interface());
+            
         }
         public static void InitModule() {
             foreach (Module i in pool)
@@ -59,13 +61,16 @@ namespace tg_duxin {
             foreach (Module i in pool) {
                 try {
                     if (message.Type == i.required &&
-                    Global.commandsPool[i.moduleID].Contains(message.Text.Split(' ')[0])
-                    )
+                    ((!i.onCommandOnly)||Global.commandsPool[i.moduleID].Contains(message.Text.Split(' ')[0]))
+                    ) {
+                        string sendBack = i.GetResult(message);
+                        if (sendBack == "") continue;
                         //TODO:非文字消息如何处理？
                         await Program.repeater.SendTextMessageAsync(
                             message.Chat.Id,
-                            i.GetResult(message)
+                            sendBack
                            );
+                    }
                 }
                 catch (Exception e) {
                     Console.WriteLine($"执行模块{i.name}时遇到异常\n{e.ToString()}\n继续执行");

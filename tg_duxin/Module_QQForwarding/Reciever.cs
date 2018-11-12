@@ -35,7 +35,7 @@ namespace tg_duxin.Module_QQForwarding {
 
         public void Run() {
             ThreadPool.QueueUserWorkItem((o) => {
-                Console.WriteLine("Webserver running...");
+                Console.WriteLine(Config.serverStartedInfo);
                 try {
                     while (_listener.IsListening) {
                         ThreadPool.QueueUserWorkItem((c) => {

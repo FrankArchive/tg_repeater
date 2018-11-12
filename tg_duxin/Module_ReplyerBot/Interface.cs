@@ -22,7 +22,7 @@ namespace tg_duxin.Module_ReplyerBot {
                 Process.GetCurrentProcess().Kill();
             }
             Global.commandsPool[moduleID] =
-                new List<string>(new string[] { "teach", "force", "reply", "delete" });
+                new List<string>(new string[] { "/teach", "/force", "/reply", "/delete" });
         }
 
         public override string GetResult(Message m) {
