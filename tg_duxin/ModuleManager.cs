@@ -8,12 +8,11 @@ using Telegram.Bot.Types.Enums;
 
 namespace tg_duxin {
     public class Module {
-        public readonly string name = "";
-        public readonly MessageType required = MessageType.Unknown;
-        public readonly int moduleID = -1;
+        public string name = "";
+        public MessageType required = MessageType.Unknown;
+        public int moduleID = -1;
         public bool onCommandOnly = true;
-
-        public virtual void Init() {
+        public virtual void submitCommands() {
             throw new NotImplementedException();
         }
         public virtual string GetResult(Message msg) {
@@ -29,15 +28,22 @@ namespace tg_duxin {
         public static void LoadModule() {
             pool.Add(new Module_QQForwarding.InterfaceListener());
         }
-        public static async void SendText(int chatID, string message) {
-            await Program.repeater.SendTextMessageAsync(
-                chatID,
-                message
-                );
+        public static async void SendText(ChatId chatID, string message, bool isMD = false) {
+            if (isMD)
+                await Program.repeater.SendTextMessageAsync(
+                    chatID,
+                    message,
+                    ParseMode.Markdown
+                    );
+            else
+                await Program.repeater.SendTextMessageAsync(
+                    chatID,
+                    message
+                    );
         }
         public static void InitModule() {
-            foreach (Module i in pool)
-                i.Init();
+        //    foreach (Module i in pool)
+        //        i.submitCommands();
         }
 
         internal static void StopModule() {
@@ -50,18 +56,21 @@ namespace tg_duxin {
         public static void LoadModule() {
             pool.Add(new Module_ReplyerBot.Interface());
             pool.Add(new Module_Start.Interface());
-            
+            pool.Add(new Module_QQForwarding.InterfaceCaller());
         }
         public static void InitModule() {
             foreach (Module i in pool)
-                i.Init();
+                i.submitCommands();
         }
         public static async void OnTrigger(object sender, MessageEventArgs msg) {
             Message message = msg.Message;
             foreach (Module i in pool) {
                 try {
                     if (message.Type == i.required &&
-                    ((!i.onCommandOnly)||Global.commandsPool[i.moduleID].Contains(message.Text.Split(' ')[0]))
+                    (
+                        (!i.onCommandOnly)||
+                        Global.commandsPool[i.moduleID].
+                            Contains(message.Text.Split(' ')[0]))
                     ) {
                         string sendBack = i.GetResult(message);
                         if (sendBack == "") continue;

@@ -8,11 +8,15 @@ using Telegram.Bot.Types.Enums;
 
 namespace tg_duxin.Module_ReplyerBot {
     class Interface : Module {
-        public new readonly string name = "回复bot";
-        public new readonly int moduleID = Global.cntModules++;
-        public new readonly MessageType required = MessageType.Text;
-
-        public override void Init() {
+        public override void submitCommands() {
+            Global.commandsPool[moduleID] =
+                new List<string>(new string[] { "/teach", "/force", "/reply", "/delete" });
+        }
+        public Interface() {
+            name = "回复bot";
+            moduleID = Global.cntModules++;
+            required = MessageType.Text;
+            onCommandOnly = false;
             try {
                 DBAgent.InitDB();
             }
@@ -21,8 +25,6 @@ namespace tg_duxin.Module_ReplyerBot {
                 Console.ReadLine();
                 Process.GetCurrentProcess().Kill();
             }
-            Global.commandsPool[moduleID] =
-                new List<string>(new string[] { "/teach", "/force", "/reply", "/delete" });
         }
 
         public override string GetResult(Message m) {

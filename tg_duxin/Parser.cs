@@ -13,10 +13,10 @@ namespace tg_duxin {
             if (raw.Split(' ')[0][0] != '/')
                 throw new CommandErrorException();
             Command ret = new Command();
-            string command = raw.Split(' ')[0].Substring(1);
+            string command = raw.Split(' ')[0];
             ret.operation = Global.commandsPool[moduleId].IndexOf(command);
             if (raw.TrimEnd().Length == command.Length) return ret;
-            raw = raw.Substring(command.Length+1).Trim();
+            raw = raw.Substring(command.Length).Trim();
             if (raw[0] != '"') raw = raw.Insert(0, " ");
             ret.parameters = new List<string>();
             for (int i = 0; i < raw.Length; i++) {

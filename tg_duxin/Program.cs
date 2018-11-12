@@ -17,13 +17,16 @@ namespace tg_duxin {
 
         //本质功能，绝对不是module//连start都是module
         private static string Repeate(string message, long id) {
-            if (message == lastMessage[id]) {
-                if (repeated == false) {
-                    repeated = true;
-                    return lastMessage[id];
+            try {
+                if (message == lastMessage[id]) {
+                    if (repeated == false) {
+                        repeated = true;
+                        return lastMessage[id];
+                    }
+                    else return "";
                 }
-                else return "";
             }
+            catch (KeyNotFoundException) { }
             lastMessage[id] = message;
             repeated = false;
             return "";

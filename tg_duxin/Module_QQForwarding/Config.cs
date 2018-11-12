@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot.Types;
 
 namespace tg_duxin.Module_QQForwarding {
     class Config {
@@ -13,7 +14,7 @@ namespace tg_duxin.Module_QQForwarding {
         public static readonly string message_type_key = "type";
 
         public static List<string> chatNameToSendTo;
-        public static List<long>   chatIdToSendTo;
-        public static List<long>   chatIdConfirmed;
+        public static List<ChatId> chatIdToSendTo;
+        public static List<ChatId> chatIdConfirmed;
     }
 }

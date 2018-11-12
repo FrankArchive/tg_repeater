@@ -8,15 +8,14 @@ using Telegram.Bot.Types.Enums;
 
 namespace tg_duxin.Module_QQForwarding {
     class InterfaceListener : Module {
-        public readonly new string name = "qq_tg互联bot";
-        //public readonly new MessageType required = MessageType.Text;//暂时
-        public readonly new int moduleID = Global.cntModules++;
-
         private Reciever server;
         private bool isStarted = false;
-        public override void Init() {
+        
+        public InterfaceListener() {
+            name = "qq_tg互联bot";
+            moduleID = Global.cntModules++;
             if (isStarted) return;
-            server = new Reciever(OnMessageRecieved, $"http://127.0.0.1:{Config.listenPort}");
+            server = new Reciever(OnMessageRecieved, $"http://127.0.0.1:{Config.listenPort}/");
             server.Run();
             isStarted = true;
         }
@@ -27,32 +26,64 @@ namespace tg_duxin.Module_QQForwarding {
             if (request.HasEntityBody == false) return Config.APIHelp;
             using (Stream bodyRecv = request.InputStream) {
                 StreamReader bodyRead = new StreamReader(bodyRecv, request.ContentEncoding);
-                string toSend = Protocal.Deserialize(bodyRead.ReadToEnd());
-                
-                foreach (int id in Config.chatIdToSendTo)
-                    OptimisticModuleManager.SendText(id, toSend);
+                string toSend = "";
+                try {
+                    toSend = Protocal.Deserialize(bodyRead.ReadToEnd());
+                }
+                catch(Exception e) {
+                    if(e is NotImplementedException) {
+                        return "暂不支持发送此格式";
+                    }
+                    else if(e is FormatException) {
+                        return "json格式错误";
+                    }
+                }
+                foreach (ChatId id in Config.chatIdToSendTo)
+                    OptimisticModuleManager.SendText(id, toSend, true);
                 return "ok";
             }
         }
     }
     class InterfaceCaller : Module {
-        public readonly new string name = "tg_qq互联bot";
-        public readonly new MessageType required = MessageType.Text;
-        public readonly new int moduleID = Global.cntModules++;
-        public readonly new bool onCommandOnly = false;
-        public override void Init() {
+        public override void submitCommands() {
             Global.commandsPool[moduleID] = new List<string>(new string[] { "/get", "/activate" });
         }
+        public InterfaceCaller() {
+            name = "tg_qq互联bot";
+            moduleID = Global.cntModules++;
+            onCommandOnly = false;
+            required = MessageType.Text;
+            Config.chatIdToSendTo = new List<ChatId>();
+            Config.chatNameToSendTo = new List<string>();
+            Config.chatIdConfirmed = new List<ChatId>();
+        }
+        private string getName(Message msg) {
+            switch (msg.Chat.Type) {
+                case ChatType.Supergroup:
+                case ChatType.Group:
+                    return msg.Chat.Title;
+                case ChatType.Private:
+                    return msg.Chat.Username;
+                default:
+                    return "";//throw exception?
+            }
+        }
         public override string GetResult(Message msg) {
-            if(msg.Text.Split(' ')[0] != "/activate") {
+            if (msg.Text.Split(' ')[0] != "/activate" &&
+                msg.Text.Split(' ')[0] != "/get") {
+                bool flag = false;
+                foreach (ChatId i in Config.chatIdToSendTo)
+                    if (i.Identifier == msg.Chat.Id)
+                        flag = true;
+                if (flag) return "";
                 Config.chatIdToSendTo.Add(msg.Chat.Id);
-                Config.chatNameToSendTo.Add(msg.Chat.Username);
+                Config.chatNameToSendTo.Add(getName(msg));
                 return "";
             }
             string ret = "";
             switch(msg.Text.Split(' ')[0]) {
                 case "/get":
-                    ret = "当前接收到了来自";
+                    ret = "当前接收到了来自\"";
                     foreach (string name in Config.chatNameToSendTo)
                         ret += name + "\" , \"";
                     ret += "\"的消息";return ret;
