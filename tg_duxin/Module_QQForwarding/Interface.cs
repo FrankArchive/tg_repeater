@@ -8,6 +8,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace tg_duxin.Module_QQForwarding {
     class InterfaceListener : Module {
+        //private Reciever_D server_;
         private Reciever server;
         private bool isStarted = false;
         
@@ -15,34 +16,53 @@ namespace tg_duxin.Module_QQForwarding {
             name = "qq_tg互联bot";
             moduleID = Global.cntModules++;
             if (isStarted) return;
-            server = new Reciever(OnMessageRecieved, $"http://127.0.0.1:{Config.listenPort}/");
-            server.Run();
+            //HTTPLISTENER DEPRECATED
+            //LINUX OPTION:1\Nancy 2\k
+            //server_ = new Reciever_D(OnMessageRecieved, $"http://0.0.0.0:{Config.listenPort}/");
+            //server_.Run();
+            server = new Reciever($"http://0.0.0.0:{Config.listenPort}/");
             isStarted = true;
         }
-        public override void Stop() {
-            server.Stop();
-        }
-        public static string OnMessageRecieved(HttpListenerRequest request) {
-            if (request.HasEntityBody == false) return Config.APIHelp;
-            using (Stream bodyRecv = request.InputStream) {
-                StreamReader bodyRead = new StreamReader(bodyRecv, request.ContentEncoding);
-                string toSend = "";
-                try {
-                    toSend = Protocal.Deserialize(bodyRead.ReadToEnd());
-                }
-                catch(Exception e) {
-                    if(e is NotImplementedException) {
-                        return "暂不支持发送此格式";
-                    }
-                    else if(e is FormatException) {
-                        return "json格式错误";
-                    }
-                }
-                foreach (ChatId id in Config.chatIdToSendTo)
-                    OptimisticModuleManager.SendText(id, toSend, true);
-                return "ok";
+        public override void Stop() => server.Stop();
+
+        public static string OnMessageRecieved(string request) {
+            string toSend = "";
+            try {
+                toSend = Protocal.Deserialize(request);
             }
+            catch (Exception e) {
+                if (e is NotImplementedException) {
+                    return "暂不支持发送此格式";
+                }
+                else if (e is FormatException) {
+                    return "json格式错误";
+                }
+            }
+            foreach (ChatId id in Config.chatIdToSendTo)
+                OptimisticModuleManager.SendText(id, toSend, true);
+            return "ok";
         }
+        //public static string OnMessageRecieved_(HttpListenerRequest request) {
+        //    if (request.HasEntityBody == false) return Config.APIHelp;
+        //    using (Stream bodyRecv = request.InputStream) {
+        //        StreamReader bodyRead = new StreamReader(bodyRecv, request.ContentEncoding);
+        //        string toSend = "";
+        //        try {
+        //            toSend = Protocal.Deserialize(bodyRead.ReadToEnd());
+        //        }
+        //        catch(Exception e) {
+        //            if(e is NotImplementedException) {
+        //                return "暂不支持发送此格式";
+        //            }
+        //            else if(e is FormatException) {
+        //                return "json格式错误";
+        //            }
+        //        }
+        //        foreach (ChatId id in Config.chatIdToSendTo)
+        //            OptimisticModuleManager.SendText(id, toSend, true);
+        //        return "ok";
+        //    }
+        //}
     }
     class InterfaceCaller : Module {
         public override void submitCommands() {

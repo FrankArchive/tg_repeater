@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SQLite;
-using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Text;
 namespace tg_duxin.Module_ReplyerBot {
