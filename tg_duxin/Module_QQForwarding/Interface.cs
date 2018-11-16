@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Exceptions;
 
 namespace tg_duxin.Module_QQForwarding {
     class InterfaceListener : Module {
@@ -13,20 +14,17 @@ namespace tg_duxin.Module_QQForwarding {
         private bool isStarted = false;
         
         public InterfaceListener() {
-            name = "qq_tg互联bot";
+            name = Config.module_name;
             moduleID = Global.cntModules++;
             if (isStarted) return;
-            //HTTPLISTENER DEPRECATED
-            //LINUX OPTION:1\Nancy 2\k
-            //server_ = new Reciever_D(OnMessageRecieved, $"http://0.0.0.0:{Config.listenPort}/");
-            //server_.Run();
-            server = new Reciever($"http://0.0.0.0:{Config.listenPort}/");
+            server = new Reciever($"http://127.0.0.1:{Config.listenPort}");
             isStarted = true;
         }
         public override void Stop() => server.Stop();
 
         public static string OnMessageRecieved(string request) {
             string toSend = "";
+            if (request.Length == 0) return Config.APIHelp;
             try {
                 toSend = Protocal.Deserialize(request);
             }
@@ -35,41 +33,27 @@ namespace tg_duxin.Module_QQForwarding {
                     return "暂不支持发送此格式";
                 }
                 else if (e is FormatException) {
-                    return "json格式错误";
+                    return "json格式错误\n" + Config.APIHelp;
                 }
+                else
+                    Console.WriteLine($"[QQForwarding]发生了异常\n{e.ToString()}\n继续执行");
             }
-            foreach (ChatId id in Config.chatIdToSendTo)
-                OptimisticModuleManager.SendText(id, toSend, true);
+            try {
+                foreach (ChatId id in Config.chatIdConfirmed)
+                    OptimisticModuleManager.SendText(id, toSend, true);
+            }
+            catch (ApiRequestException) {
+                return Config.APIHelp;
+            }
             return "ok";
         }
-        //public static string OnMessageRecieved_(HttpListenerRequest request) {
-        //    if (request.HasEntityBody == false) return Config.APIHelp;
-        //    using (Stream bodyRecv = request.InputStream) {
-        //        StreamReader bodyRead = new StreamReader(bodyRecv, request.ContentEncoding);
-        //        string toSend = "";
-        //        try {
-        //            toSend = Protocal.Deserialize(bodyRead.ReadToEnd());
-        //        }
-        //        catch(Exception e) {
-        //            if(e is NotImplementedException) {
-        //                return "暂不支持发送此格式";
-        //            }
-        //            else if(e is FormatException) {
-        //                return "json格式错误";
-        //            }
-        //        }
-        //        foreach (ChatId id in Config.chatIdToSendTo)
-        //            OptimisticModuleManager.SendText(id, toSend, true);
-        //        return "ok";
-        //    }
-        //}
     }
     class InterfaceCaller : Module {
         public override void submitCommands() {
-            Global.commandsPool[moduleID] = new List<string>(new string[] { "/get", "/activate" });
+            Global.commandsPool[moduleID] = new List<string>(new string[] { "/get", "/activate", "/deactivated" });
         }
         public InterfaceCaller() {
-            name = "tg_qq互联bot";
+            name = Config.module_name;
             moduleID = Global.cntModules++;
             onCommandOnly = false;
             required = MessageType.Text;
@@ -89,8 +73,7 @@ namespace tg_duxin.Module_QQForwarding {
             }
         }
         public override string GetResult(Message msg) {
-            if (msg.Text.Split(' ')[0] != "/activate" &&
-                msg.Text.Split(' ')[0] != "/get") {
+            if (Global.commandsPool[moduleID].IndexOf(msg.Text.Split(' ')[0]) == -1) {
                 bool flag = false;
                 foreach (ChatId i in Config.chatIdToSendTo)
                     if (i.Identifier == msg.Chat.Id)
@@ -110,7 +93,7 @@ namespace tg_duxin.Module_QQForwarding {
                 case "/activate":
                     try {
                         for (int i = 0; i < Config.chatIdToSendTo.Count; i++) {
-                            if (msg.Text.Substring(10).Trim() == Config.chatNameToSendTo[i]) {
+                            if (msg.Text.Substring(9).Trim() == Config.chatNameToSendTo[i]) {
                                 Config.chatIdConfirmed.Add(Config.chatIdToSendTo[i]);
                                 break;
                             }
@@ -121,6 +104,13 @@ namespace tg_duxin.Module_QQForwarding {
                         return $"激活中出现了一点问题";
                     }
                     return "成功激活";
+                case "/deactivate":
+                    foreach (ChatId i in Config.chatIdConfirmed)
+                        if (i.Username == msg.Text.Substring(11).Trim()) {
+                            Config.chatIdConfirmed.Remove(i);
+                            return "成功关闭";
+                        }
+                    return "未找到";
             }
             return "貌似进行了不可能的操作。。。你大概是get了我的shell? tqdl";
         }

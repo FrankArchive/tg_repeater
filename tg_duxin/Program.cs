@@ -16,7 +16,11 @@ namespace tg_duxin {
         public static TelegramBotClient repeater = new TelegramBotClient(Global.bot_key);
 
         //本质功能，绝对不是module//连start都是module
+        private static bool mode = false;
         private static string Repeate(string message, long id) {
+            if (mode) {
+                return message;
+            }
             try {
                 if (message == lastMessage[id]) {
                     if (repeated == false) {

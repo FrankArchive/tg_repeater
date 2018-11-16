@@ -35,7 +35,7 @@ namespace tg_duxin.Module_ReplyerBot {
             }
             catch (CommandErrorException) {
                 if (DBAgent.isExist(msg) == false)
-                    throw new NotImplementedException();
+                    return "";
                 else
                     return DBAgent.Lookup(msg);//带空格的情况
             }
