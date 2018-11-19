@@ -71,7 +71,7 @@ namespace tg_duxin.Module_ReplyerBot {
                     }
                     return "我本来就不知道这句话，那你叫我忘掉啥";
                 case -1:
-                    throw new NotImplementedException();
+                    return "";
             }
             throw new Exception("有毒");
             //Console.Write("程序不会跑到这里的".Length);

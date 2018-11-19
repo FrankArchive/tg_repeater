@@ -81,8 +81,14 @@ namespace tg_duxin {
                                 sendBack
                                );
                         }
-                        catch (NotImplementedException) {
-                            //supress not implemented exceptions
+                        catch (Exception e) {
+                            if (e is NotImplementedException) { }
+                            else if(e is FormatException) {
+                                await Program.repeater.SendTextMessageAsync(
+                                    message.Chat.Id,
+                                    "命令格式错误"
+                                );
+                            }
                         }
                     }
                 }
