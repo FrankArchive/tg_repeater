@@ -7,7 +7,7 @@ namespace tg_duxin.Module_QQForwarding {
     class Config {
         public static readonly string module_name = "[QQForwarding]qq_tg互联bot";
 
-        public static readonly int    listenPort = 2333;
+        public static readonly int    listenPort = 233;
         public static readonly string serverStartedInfo = $"已开始在端口{listenPort}进行监听";
 
         public static readonly string message_from_key = "from";

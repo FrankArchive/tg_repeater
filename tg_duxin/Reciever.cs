@@ -9,11 +9,12 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace tg_duxin.Module_QQForwarding {
+namespace tg_duxin {
     class Reciever {
         private IWebHost host;
-
-        public Reciever(params string[] prefixes) {
+        public Func<string, string> onRecv;
+        public Reciever(Func<string, string> onRecv, params string[] prefixes) {
+            this.onRecv = onRecv;
             host = new WebHostBuilder().
                 UseKestrel().
                 UseUrls(prefixes).
@@ -34,12 +35,11 @@ namespace tg_duxin.Module_QQForwarding {
         }
 
         private async Task HttpRequestHandler(HttpContext context) {
-            string build = "";
             byte[] content = new byte[2000];
             if (context.Request.ContentLength != 0)
                 context.Request.Body.Read(content, 0, 2000);
-            string ret =
-                InterfaceListener.OnMessageRecieved(Encoding.ASCII.GetString(content));
+            string ret = "";
+            //    Reciever.onRecv(content);
             await context.Response.WriteAsync(ret);
         }
     }

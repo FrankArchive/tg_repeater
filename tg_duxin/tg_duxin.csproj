@@ -13,4 +13,10 @@
     <PackageReference Include="Telegram.Bot" Version="14.10.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Sisters.WudiLib">
+      <HintPath>..\..\Sisters.WudiLib\Sisters.WudiLib\bin\Debug\netstandard2.0\Sisters.WudiLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

@@ -17,7 +17,7 @@ namespace tg_duxin.Module_QQForwarding {
             name = Config.module_name;
             moduleID = Global.cntModules++;
             if (isStarted) return;
-            server = new Reciever($"http://127.0.0.1:{Config.listenPort}");
+            server = new Reciever(OnMessageRecieved, $"http://127.0.0.1:{Config.listenPort}");
             isStarted = true;
         }
         public override void Stop() => server.Stop();
@@ -56,7 +56,7 @@ namespace tg_duxin.Module_QQForwarding {
             name = Config.module_name;
             moduleID = Global.cntModules++;
             onCommandOnly = false;
-            required = MessageType.Text;
+            required = new List<MessageType>{ MessageType.Text};
             Config.chatIdToSendTo = new List<ChatId>();
             Config.chatNameToSendTo = new List<string>();
             Config.chatIdConfirmed = new List<ChatId>();

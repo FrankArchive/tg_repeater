@@ -9,7 +9,7 @@ using Telegram.Bot.Types.Enums;
 namespace tg_duxin {
     public class Module {
         public string name = "";
-        public MessageType required = MessageType.Unknown;
+        public List<MessageType> required = new List<MessageType>{ MessageType.Unknown };
         public int moduleID = -1;
         public bool onCommandOnly = true;
         public virtual void submitCommands() {
@@ -26,7 +26,8 @@ namespace tg_duxin {
     class OptimisticModuleManager {//主动式mod
         private static List<Module> pool = new List<Module>();
         public static void LoadModule() {
-            pool.Add(new Module_QQForwarding.InterfaceListener());
+            //pool.Add(new Module_QQForwarding.InterfaceListener());
+            pool.Add(new Module_CoolQForward.InterfaceRecv());
         }
         public static async void SendText(ChatId chatID, string message, bool isMD = false) {
             if (isMD)
@@ -56,7 +57,8 @@ namespace tg_duxin {
         public static void LoadModule() {
             pool.Add(new Module_ReplyerBot.Interface());
             pool.Add(new Module_Start.Interface());
-            pool.Add(new Module_QQForwarding.InterfaceCaller());
+            //pool.Add(new Module_QQForwarding.InterfaceCaller());
+            pool.Add(new Module_CoolQForward.InterfaceSend());
         }
         public static void InitModule() {
             foreach (Module i in pool)
@@ -66,7 +68,7 @@ namespace tg_duxin {
             Message message = msg.Message;
             foreach (Module i in pool) {
                 try {
-                    if (message.Type == i.required &&
+                    if (i.required.IndexOf(message.Type)!=-1 &&
                     (
                         (!i.onCommandOnly)||
                         Global.commandsPool[i.moduleID].

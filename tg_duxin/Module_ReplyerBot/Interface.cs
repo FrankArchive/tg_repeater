@@ -15,7 +15,7 @@ namespace tg_duxin.Module_ReplyerBot {
         public Interface() {
             name = "回复bot";
             moduleID = Global.cntModules++;
-            required = MessageType.Text;
+            required = new List<MessageType> { MessageType.Text };
             onCommandOnly = false;
             try {
                 DBAgent.InitDB();
