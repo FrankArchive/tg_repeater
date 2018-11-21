@@ -9,20 +9,20 @@ using Telegram.Bot.Exceptions;
 
 namespace tg_duxin.Module_QQForwarding {
     class InterfaceListener : Module {
-        //private Reciever_D server_;
-        private Reciever server;
+        //private Receiver_D server_;
+        private Receiver server;
         private bool isStarted = false;
         
         public InterfaceListener() {
             name = Config.module_name;
             moduleID = Global.cntModules++;
             if (isStarted) return;
-            server = new Reciever(OnMessageRecieved, $"http://127.0.0.1:{Config.listenPort}");
+            server = new Receiver(OnMessageReceived, $"http://127.0.0.1:{Config.listenPort}");
             isStarted = true;
         }
         public override void Stop() => server.Stop();
 
-        public static string OnMessageRecieved(string request) {
+        public static string OnMessageReceived(string request) {
             string toSend = "";
             if (request.Length == 0) return Config.APIHelp;
             try {

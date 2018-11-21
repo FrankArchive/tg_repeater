@@ -10,14 +10,20 @@ namespace tg_duxin {
     class CommandErrorException : Exception { };
     class Parser {
         public static Command ParseCommand(string raw, int moduleId) {
-            if (raw.Split(' ')[0][0] != '/')
+            try {
+                if (raw.Split(' ')[0][0] != '/')
+                    throw new CommandErrorException();
+            }
+            catch {
                 throw new CommandErrorException();
+            }
             Command ret = new Command();
             string command = raw.Split(' ')[0];
             ret.operation = Global.commandsPool[moduleId].IndexOf(command);
+            ret.parameters = new List<string>();
             if (raw.TrimEnd().Length == command.Length) return ret;
             raw = raw.Substring(command.Length).Trim();
-            ret.parameters = new List<string>();
+            
             for (int i = 0; i < raw.Length;) {
                 int x = -1;
                 if (raw[0] != '"') raw = raw.Insert(0, " ");

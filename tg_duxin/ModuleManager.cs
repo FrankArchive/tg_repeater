@@ -5,6 +5,7 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InputFiles;
 
 namespace tg_duxin {
     public class Module {
@@ -35,12 +36,18 @@ namespace tg_duxin {
                     chatID,
                     message,
                     ParseMode.Markdown
-                    );
+                );
             else
                 await Program.repeater.SendTextMessageAsync(
                     chatID,
                     message
-                    );
+                );
+        }
+        public static async void SendPhoto(ChatId chatId, string url) {
+            await Program.repeater.SendPhotoAsync (
+                chatId,
+                url
+            );
         }
         public static void InitModule() {
         //    foreach (Module i in pool)
@@ -68,7 +75,7 @@ namespace tg_duxin {
             Message message = msg.Message;
             foreach (Module i in pool) {
                 try {
-                    if (i.required.IndexOf(message.Type)!=-1 &&
+                    if (i.required.IndexOf(message.Type) != -1 &&
                     (
                         (!i.onCommandOnly)||
                         Global.commandsPool[i.moduleID].

@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace tg_duxin {
-    class Reciever {
+    class Receiver {
         private IWebHost host;
         public Func<string, string> onRecv;
-        public Reciever(Func<string, string> onRecv, params string[] prefixes) {
+        public Receiver(Func<string, string> onRecv, params string[] prefixes) {
             this.onRecv = onRecv;
             host = new WebHostBuilder().
                 UseKestrel().
@@ -39,7 +39,7 @@ namespace tg_duxin {
             if (context.Request.ContentLength != 0)
                 context.Request.Body.Read(content, 0, 2000);
             string ret = "";
-            //    Reciever.onRecv(content);
+            //    Receiver.onRecv(content);
             await context.Response.WriteAsync(ret);
         }
     }

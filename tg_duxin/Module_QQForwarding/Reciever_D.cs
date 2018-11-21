@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 
 namespace tg_duxin.Module_QQForwarding {
-    public class Reciever_D {//Deprecated: not cross platform
+    public class Receiver_D {//Deprecated: not cross platform
         private readonly HttpListener _listener = new HttpListener();
         private readonly Func<HttpListenerRequest, string> _responderMethod;
 
-        public Reciever_D(string[] prefixes, Func<HttpListenerRequest, string> method) {
+        public Receiver_D(string[] prefixes, Func<HttpListenerRequest, string> method) {
             if (!HttpListener.IsSupported)
                 throw new NotSupportedException(
                     "Needs Windows XP SP2, Server 2003 or later.");
@@ -30,7 +30,7 @@ namespace tg_duxin.Module_QQForwarding {
             _listener.Start();
         }
 
-        public Reciever_D(Func<HttpListenerRequest, string> method, params string[] prefixes)
+        public Receiver_D(Func<HttpListenerRequest, string> method, params string[] prefixes)
             : this(prefixes, method) { }
 
         public void Run() {
