@@ -38,7 +38,7 @@ namespace tg_duxin.Module_CoolQForward
         private async static void onMessageReceived(HttpApiClient api, Sisters.WudiLib.Posts.Message message) {
             // LOAD MOD FOR QQ GROUPS TOO!!!
             //api.RecallMessageAsync(message);
-            
+
             try{
                 Command com = Parser.ParseCommand(message.RawMessage, Config.module_ID);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
@@ -44,10 +45,18 @@ namespace tg_duxin {
                 );
         }
         public static async void SendPhoto(ChatId chatId, string url) {
-            await Program.repeater.SendPhotoAsync (
-                chatId,
-                url
-            );
+            try{
+                await Program.repeater.SendPhotoAsync (
+                    chatId,
+                    url
+                );
+            }
+            catch(ApiRequestException) {
+                await Program.repeater.SendTextMessageAsync (
+                    chatId,
+                    $"获取图片失败，url为:{url}"
+                );
+            }
         }
         public static void InitModule() {
         //    foreach (Module i in pool)
