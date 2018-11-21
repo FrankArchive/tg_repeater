@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "-c",
+                "-o",
                 "${workspaceFolder}/tg_duxin/release"
             ]
         }

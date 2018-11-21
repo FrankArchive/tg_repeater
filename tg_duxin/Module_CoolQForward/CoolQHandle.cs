@@ -11,6 +11,7 @@ namespace tg_duxin.Module_CoolQForward
             if (Config.isStarted == false) {
                 Config.CoolQClient = new HttpApiClient();
                 Config.CoolQClient.ApiAddress = Config.apiAddr;
+                Console.WriteLine($"已连接到{Config.apiAddr} 酷Qapi");
                 Config.CoolQListener = new Sisters.WudiLib.Posts.ApiPostListener(Config.listenAddr);
                 Config.CoolQListener.ApiClient = Config.CoolQClient;
                 Config.CoolQListener.MessageEvent += onMessageReceived;
@@ -19,6 +20,7 @@ namespace tg_duxin.Module_CoolQForward
 
                 Config.CoolQListener.GroupRequestEvent += ApiPostListener.ApproveAllGroupRequests;
                 Config.CoolQListener.StartListen();
+                Console.WriteLine($"在{Config.listenAddr}进行监听");
                 Config.isStarted = true;
             }
         }
@@ -30,9 +32,13 @@ namespace tg_duxin.Module_CoolQForward
                 
             }
         }
+        private static SendingMessage repeate(Sisters.WudiLib.Posts.Message message){
+            throw new NotImplementedException();
+        }
         private async static void onMessageReceived(HttpApiClient api, Sisters.WudiLib.Posts.Message message) {
             // LOAD MOD FOR QQ GROUPS TOO!!!
             //api.RecallMessageAsync(message);
+            
             try{
                 Command com = Parser.ParseCommand(message.RawMessage, Config.module_ID);
 
@@ -118,19 +124,20 @@ namespace tg_duxin.Module_CoolQForward
             foreach (Section i in message.Content.Sections) {
                 switch(i.Type) {
                     case Section.TextType:
-                        OptimisticModuleManager.SendText(target, i.Data["text"]);
+                        OptimisticModuleManager.SendText(target, $"[{NicknameLookup.GetCQNickname(message.Sender)}] {i.Data["text"]}");
                         return;
                     case Section.ImageType:
+                        OptimisticModuleManager.SendText(target, $"{NicknameLookup.GetCQNickname(message.Sender)}发送了图片");
                         OptimisticModuleManager.SendPhoto(target, i.Data["url"]);
                         return;
                     case Section.FaceType:
-                        OptimisticModuleManager.SendText(target, ConvertEmoji(Convert.ToInt32(i.Data["id"])));
+                        OptimisticModuleManager.SendText(target, $"[{NicknameLookup.GetCQNickname(message.Sender)}] {ConvertEmoji(Convert.ToInt32(i.Data["id"]))}");
                         return;
                 }
             }
         }
         private static string ConvertEmoji(int FaceId) {
-            return "";
+            return "一个qq表情";
             //TODO: 将qq表情转换为emoji
         }
     }

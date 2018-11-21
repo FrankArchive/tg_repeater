@@ -17,8 +17,8 @@ namespace tg_duxin.Module_CoolQForward
         /// <param name="user"></param>
         /// <returns></returns>
         public static string GetTGNickname(User user) {
-            if(tg_dict[user.Username] is null)
-                tg_dict[user.Username] = user.Username;
+            if(tg_dict.ContainsKey(user.Username) == false)
+                tg_dict.Add(user.Username, user.Username);
             
             return tg_dict[user.Username];
         }
@@ -38,8 +38,8 @@ namespace tg_duxin.Module_CoolQForward
         /// <returns></returns>
         public static string GetCQNickname(JObject user){
             string uname = user["nickname"].ToString();
-            if(cq_dict[uname] is null)
-                cq_dict[uname] = uname;
+            if(cq_dict.ContainsKey(uname) == false)
+                cq_dict.Add(uname, uname);
             
             return cq_dict[uname];
         }

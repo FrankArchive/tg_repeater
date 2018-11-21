@@ -14,10 +14,6 @@ namespace tg_duxin.Module_CoolQForward {
             moduleID = Global.cntModules++;
             Config.module_ID = moduleID;
             required = new List<MessageType>{ MessageType.Text/*, MessageType.Photo*/ };
-            if (Config.isStarted) return;
-            Config.CoolQClient = new HttpApiClient();
-            Config.CoolQClient.ApiAddress = Config.apiAddr;
-            Config.isStarted = true;
         }
         public override void submitCommands() {
             Global.commandsPool[moduleID] = (new List<string> { "/start_send", "/start_recv", "/stop_send", "/stop_recv", "/send", "/setnick" });
