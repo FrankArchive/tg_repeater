@@ -17,7 +17,7 @@ namespace tg_duxin {
 
         //本质功能，绝对不是module//连start都是module
         private static bool mode = false;
-        private static string Repeate(string message, long id) {
+        public static string Repeate(string message, long id) {
             if (mode) {
                 return message;
             }

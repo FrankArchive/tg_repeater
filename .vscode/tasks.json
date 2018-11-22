@@ -19,7 +19,8 @@
                 "publish",
                 "-o",
                 "${workspaceFolder}/tg_duxin/release"
-            ]
+            ],
+            "problemMatcher": []
         }
     ]
 }

@@ -1,36 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
+using System;
+using tg_duxin.Module_ReplyerBot;
 
-namespace tg_duxin.Module_ReplyerBot {
-    class Interface : Module {
-        public override void submitCommands () {
-            Global.commandsPool[moduleID] =
-                new List<string> (new string[] { "/teach", "/force", "/reply", "/delete" });
-        }
-        public Interface () {
-            name = "回复bot";
-            moduleID = Global.cntModules++;
-            required = new List<MessageType> { MessageType.Text };
-            onCommandOnly = false;
-            try {
-                DBAgent.InitDB ();
-            } catch {
-                Console.WriteLine ("Database error, fatal...press enter to exit");
-                Console.ReadLine ();
-                Process.GetCurrentProcess ().Kill ();
-            }
-        }
+namespace tg_duxin.Module_CoolQForward {
+    public class Module_QQ {
+        public static string GetResult (string msg, string user) {
+            
+            string toRep = Program.Repeate(msg, 233);
+            if(toRep != "")return msg;
 
-        public override string GetResult (Message m) {
             Command x;
-            string msg = m.Text, user = m.From.Username;
             try {
-                x = Parser.ParseCommand (msg, moduleID);
+                x = Parser.ParseCommand (msg, 0);
             } catch (CommandErrorException) {
                 if (DBAgent.isExist (msg) == false)
                     return "";

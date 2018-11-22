@@ -6,6 +6,7 @@ using System.Text;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
+//这个Module有点乱，跳过吧
 namespace tg_duxin.Module_CoolQForward {
     class InterfaceSend : Module {
         public InterfaceSend() {
@@ -16,7 +17,7 @@ namespace tg_duxin.Module_CoolQForward {
             required = new List<MessageType>{ MessageType.Text/*, MessageType.Photo*/ };
         }
         public override void submitCommands() {
-            Global.commandsPool[moduleID] = (new List<string> { "/start_send", "/start_recv", "/stop_send", "/stop_recv", "/send", "/setnick" });
+            Global.commandsPool[moduleID] = (new List<string> { "/start_send", "/start_recv", "/stop_send", "/stop_recv", "/send", "/setnick", "/getlast", "/ping" });
             //Config.CQrecv.Add(new Sisters.WudiLib.Posts.PrivateEndpoint(745679136));//send all to me! for debug
         }
         public override void Stop() {
@@ -70,6 +71,8 @@ namespace tg_duxin.Module_CoolQForward {
                         NicknameLookup.SetCQNickname(command.parameters[0], command.parameters[1]);
                         //throw new NotImplementedException();
                         return Config.setNickSuccess;
+                    case 6://
+                        return CoolQHandle.Ping();
                 }
             }
             catch(CommandErrorException){

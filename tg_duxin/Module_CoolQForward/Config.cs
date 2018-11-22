@@ -18,6 +18,9 @@ namespace tg_duxin.Module_CoolQForward {
         public static string apiAddr = "http://localhost:233";
         public static string listenAddr = "http://+:234";
 
+
+        public static Dictionary<string, Sisters.WudiLib.Posts.ReceivedMessage> lastSaid;
+
         /// <summary>
         /// 列表内的QQ成员/群组能够向TG发出消息
         /// </summary>

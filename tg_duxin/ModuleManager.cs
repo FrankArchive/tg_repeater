@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Exceptions;
@@ -14,15 +15,11 @@ namespace tg_duxin {
         public List<MessageType> required = new List<MessageType>{ MessageType.Unknown };
         public int moduleID = -1;
         public bool onCommandOnly = true;
-        public virtual void submitCommands() {
-            throw new NotImplementedException();
-        }
-        public virtual string GetResult(Message msg) {
-            throw new NotImplementedException();
-        }
-        public virtual void Stop() {
-            throw new NotImplementedException();
-        }
+        public virtual void submitCommands() 
+            => throw new NotImplementedException();
+        public virtual string GetResult(Message msg) 
+            => throw new NotImplementedException();
+        public virtual void Stop() => throw new NotImplementedException();
     }
 
     class OptimisticModuleManager {//主动式mod
