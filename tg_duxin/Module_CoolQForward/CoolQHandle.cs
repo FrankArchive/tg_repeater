@@ -40,6 +40,7 @@ namespace tg_duxin.Module_CoolQForward {
             // LOAD MOD FOR QQ GROUPS TOO!!!
             //api.RecallMessageAsync(message);
             if (message.Content.IsPlaintext) {
+                Console.WriteLine($"收到来自{message.Sender["nickname"]}的QQ文字消息{message.RawMessage}");
                 try {
                     string result = Module_QQ.GetResult (message.Content.Text, message.Sender["nickname"].ToString ());
                     if (result != "")

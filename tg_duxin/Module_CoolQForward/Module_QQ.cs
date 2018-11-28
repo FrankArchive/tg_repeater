@@ -4,13 +4,12 @@ using tg_duxin.Module_ReplyerBot;
 namespace tg_duxin.Module_CoolQForward {
     public class Module_QQ {
         public static string GetResult (string msg, string user) {
-            
-            string toRep = Program.Repeate(msg, 233);
-            if(toRep != "")return msg;
+            string toRep = Program.Repeate (msg, 233);
+            if (toRep != "") return msg;
 
             Command x;
             try {
-                x = Parser.ParseCommand (msg, 0);
+                x = Parser.ParseCommand (msg, Config.sub_module_ID);
             } catch (CommandErrorException) {
                 if (DBAgent.isExist (msg) == false)
                     return "";
@@ -48,6 +47,27 @@ namespace tg_duxin.Module_CoolQForward {
                         return "我。。忘了什么？";
                     }
                     return "我本来就不知道这句话，那你叫我忘掉啥";
+                case 4:
+                case 5:
+                    Newtonsoft.Json.Linq.JObject result;
+                    string url = "https://v1.hitokoto.cn/?encode=json&charset=utf-8";
+                    if (x.parameters.Count >= 1) {
+                        if (x.parameters[0] == "help") {
+                            string ret = "可用的类型有:\n";
+                            foreach (var i in Module_hitokoto.Interface.types) ret += i + '\n';
+                            return ret;
+                        }
+                        if (Module_hitokoto.Interface.types.Contains (x.parameters[0]))
+                            url +=
+                            $"&c={Convert.ToChar('a' + Module_hitokoto.Interface.types.IndexOf(x.parameters[0]))}";
+                    }
+                    try {
+                        using (var http = new System.Net.Http.HttpClient ()) {
+                            string res = http.GetStringAsync (url).Result;
+                            result = (Newtonsoft.Json.Linq.JObject) Newtonsoft.Json.JsonConvert.DeserializeObject (res);
+                        }
+                    } catch { return "网络错误"; }
+                    return $"{result["hitokoto"].ToString()}\n--{result["from"].ToString()}";
                 case -1:
                     return "";
             }

@@ -10,6 +10,27 @@
                 "${workspaceFolder}/tg_duxin.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "-o",
+                "${workspaceFolder}/tg_duxin/release"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "copy to server",
+            "command": "scp",
+            "type": "shell",
+            "args": [
+                "-P", "28110",
+                "-r", "${workspaceFolder}/tg_duxin/release",
+                "root@service.std-frank.club:"
+            ]
         }
     ]
 }

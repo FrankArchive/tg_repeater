@@ -37,6 +37,7 @@ namespace tg_duxin {
         }
         private static async void OnMessageRecv(object sender,MessageEventArgs msg) {
             Message message = msg.Message;
+            Console.WriteLine($"收到来自{msg.Message.From.Username}的TG消息{msg.Message}");
             switch (message.Type) {
                 case MessageType.Text:
                     string s = Repeate(message.Text,message.Chat.Id);

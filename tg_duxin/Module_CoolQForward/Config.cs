@@ -8,7 +8,7 @@ using Telegram.Bot.Types;
 namespace tg_duxin.Module_CoolQForward {
     class Config {
         public static string module_name = "酷Q转发(send)";
-        public static int    module_ID;
+        public static int    module_ID, sub_module_ID;
 
         public static int listenPort = 234;
 

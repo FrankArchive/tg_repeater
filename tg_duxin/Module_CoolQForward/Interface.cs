@@ -14,10 +14,15 @@ namespace tg_duxin.Module_CoolQForward {
             onCommandOnly = false;
             moduleID = Global.cntModules++;
             Config.module_ID = moduleID;
+            Config.sub_module_ID = Global.cntModules++;
+
             required = new List<MessageType>{ MessageType.Text/*, MessageType.Photo*/ };
         }
         public override void submitCommands() {
             Global.commandsPool[moduleID] = (new List<string> { "/start_send", "/start_recv", "/stop_send", "/stop_recv", "/send", "/setnick", "/getlast", "/ping" });
+
+            Global.commandsPool[Config.sub_module_ID]
+                = new List<string> (new string[] { "/teach", "/force", "/reply", "/delete", "/hitokoto", "/一言" });
             //Config.CQrecv.Add(new Sisters.WudiLib.Posts.PrivateEndpoint(745679136));//send all to me! for debug
         }
         public override void Stop() {
