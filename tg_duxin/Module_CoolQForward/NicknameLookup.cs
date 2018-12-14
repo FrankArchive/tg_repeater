@@ -36,8 +36,7 @@ namespace tg_duxin.Module_CoolQForward
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static string GetCQNickname(JObject user){
-            string uname = user["nickname"].ToString();
+        public static string GetCQNickname(string uname){
             if(cq_dict.ContainsKey(uname) == false)
                 cq_dict.Add(uname, uname);
             
