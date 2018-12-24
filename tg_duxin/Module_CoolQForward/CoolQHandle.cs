@@ -24,8 +24,8 @@ namespace tg_duxin.Module_CoolQForward {
                 Config.CoolQClient = new cqhttp.Cyan.Instance.CQHTTPClient (
                     accessUrl: Config.apiAddr,
                     listen_port: Config.listenPort,
-                    accessToken: "qwertisverysao",
-                    secret: ""
+                    accessToken: Config.accessToken,
+                    secret: Config.secret
                 );
                 Config.CoolQClient.OnEventDelegate += HandleEvent;
                 Console.WriteLine ($"已连接到{Config.apiAddr} 酷Qapi");
