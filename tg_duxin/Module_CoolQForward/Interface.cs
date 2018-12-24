@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using cqhttp.Cyan.Messages.CQElements;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -18,13 +19,29 @@ namespace tg_duxin.Module_CoolQForward {
         public override void submitCommands () {
             Global.commandsPool[moduleID] = (new List<string> { "/start_send", "/start_recv", "/stop_send", "/stop_recv", "/send", "/setnick", "/getlast", "/ping" });
 
-            Global.commandsPool[Config.sub_module_ID] = new List<string> (new string[] { "/teach", "/force", "/reply", "/delete", "/hitokoto", "/一言" });
+            Global.commandsPool[Config.sub_module_ID] = new List<string> (new string[] { "/teach", "/force", "/reply", "/delete", "/hitokoto", "/一言", "/listen", "/点歌" });
             //Config.CQrecv.Add(new Sisters.WudiLib.Posts.PrivateEndpoint(745679136));//send all to me! for debug
         }
         public override void Stop () {
 
         }
         public override string GetResult (Telegram.Bot.Types.Message msg) {
+            bool isInList = false;
+            /*if (msg.Type == MessageType.Photo) {
+                foreach (Chat i in Config.TGsend)
+                    if (msg.Chat.Id == i.Id) {
+                        isInList = true;
+                        break;
+                    }
+                if (!isInList) return "";
+                string ms = $"[{NicknameLookup.GetTGNickname(msg.From)}] 发了一张图片";
+                foreach (var i in Config.CQrecv) {
+                    Config.CoolQClient.SendTextAsync (i.Item1, i.Item2, ms);
+                    Config.CoolQClient.SendMessageAsync (i.Item1, i.Item2,
+                        //new cqhttp.Cyan.Messages.Message (new ElementImage (msg.NewChatPhoto))
+                    );
+                }
+            }*/
             try {
                 Command command = Parser.ParseCommand (msg.Text, moduleID);
                 switch (command.operation) {
@@ -74,7 +91,6 @@ namespace tg_duxin.Module_CoolQForward {
             } catch (CommandErrorException) {
 
             }
-            bool isInList = false;
             foreach (Chat i in Config.TGsend)
                 if (msg.Chat.Id == i.Id) {
                     isInList = true;
