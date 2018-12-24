@@ -13,7 +13,7 @@ namespace tg_duxin.Module_CoolQForward {
             moduleID = Global.cntModules++;
             Config.module_ID = moduleID;
             Config.sub_module_ID = Global.cntModules++;
-            cqhttp.Cyan.Logger.verbosity_level = cqhttp.Cyan.Enums.Verbosity.DEBUG;
+            //cqhttp.Cyan.Logger.verbosity_level = cqhttp.Cyan.Enums.Verbosity.DEBUG;
 
             required = new List<MessageType> { MessageType.Text /*, MessageType.Photo*/ };
         }
