@@ -9,6 +9,10 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
+            "osx": {"env": {
+                "CQ_EVENT_SECRET": "",
+                "CQ_ACCESS_TOKEN": "qwertisverysao"
+            }},
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/Cyan.dll",
             "args": [],

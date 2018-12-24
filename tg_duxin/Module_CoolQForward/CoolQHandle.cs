@@ -24,13 +24,13 @@ namespace tg_duxin.Module_CoolQForward {
                 Config.CoolQClient = new cqhttp.Cyan.Instance.CQHTTPClient (
                     accessUrl: Config.apiAddr,
                     listen_port: Config.listenPort,
-                    accessToken: Config.accessToken,
-                    secret: Config.secret
+                    accessToken: "qwertisverysao",
+                    secret: ""
                 );
                 Config.CoolQClient.OnEventDelegate += HandleEvent;
                 Console.WriteLine ($"已连接到{Config.apiAddr} 酷Qapi");
                 Config.isStarted = true;
-                cqhttp.Cyan.Logger.verbosity_level = Verbosity.INFO;
+                cqhttp.Cyan.Logger.verbosity_level = Verbosity.DEBUG;
             }
         }
         private static CQResponse HandleEvent (CQApiClient client, CQEvent e) {

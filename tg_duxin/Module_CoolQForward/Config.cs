@@ -10,7 +10,7 @@ namespace tg_duxin.Module_CoolQForward {
         public static int module_ID, sub_module_ID;
         public static bool isStarted = false;
         public static cqhttp.Cyan.Instance.CQHTTPClient CoolQClient;
-        public static string apiAddr = "http://localhost:233";
+        public static string apiAddr = "http://service.std-frank.club:233";
         public static int listenPort = 234;
         public static string accessToken = System.Environment.GetEnvironmentVariable("CQ_ACCESS_TOKEN");
         public static string secret = System.Environment.GetEnvironmentVariable("CQ_EVENT_SECRET");
